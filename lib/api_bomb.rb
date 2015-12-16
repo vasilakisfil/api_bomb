@@ -64,13 +64,14 @@ module ApiBomb
     def probabilistic_paths_report
       return unless paths.is_a? Hash
 
-      multiplier = 100 / paths.max[1]
+      sum = paths.values.sum
 
-      puts "Load generation over random (weighted) urls"
-      paths.each do |k, v|
-        puts "#{array_path_path(path)} with probability #{multiplier * v }"
+      str =  "Load generation over random (weighted) urls \n"
+      paths.sort_by {|_key, value| value}.to_h.each do |path, weight|
+        str += "#{path_report(path)} with probability #{weight/sum} \n"
       end
 
+      return str
     end
   end
 end
