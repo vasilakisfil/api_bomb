@@ -1,15 +1,16 @@
 class ApiBomb::Commander
   include ApiBomb::Strategies::Naive
 
-  attr_reader :army, :fronts, :duration, :signaler
+  attr_reader :army, :fronts, :duration, :signaler, :logger
 
-  def initialize(army:, fronts: 1, duration: 10)
+  def initialize(army:, fronts: 1, duration: 10, logger: Logger.new(STDOUT))
     @duration = duration
     @army = army
     @fighters = []
     @statuses = []
     @hold_times = []
     @fronts = fronts
+    @logger = logger
   end
 
   def start_attack!
@@ -28,17 +29,20 @@ class ApiBomb::Commander
 
 private
   def report_attack_result
-    puts "Elapsed time: #{attack_result[:duration]}"
-    puts "Concurrency: #{attack_result[:fronts]} threads"
-    puts "Number of requests: #{attack_result[:requests]}"
-    puts "Requests per second: #{attack_result[:rps]}"
-    puts "Requests per minute: #{attack_result[:rpm]}"
-    puts "Average response time: #{attack_result[:average_rt]}"
-    puts "Standard deviation: #{attack_result[:sd_rq_time]}"
-    puts "Percentile 90th: #{attack_result[:percentile_90]}"
-    puts "Percentile 95th: #{attack_result[:percentile_95]}"
-    puts "Percentile 99th: #{attack_result[:percentile_99]}"
-    puts "server errors (5xx statuses): #{attack_result[:server_errors]}"
+    log = ''
+    log += "Elapsed time: #{attack_result[:duration]}\n"
+    log += "Concurrency: #{attack_result[:fronts]} threads\n"
+    log += "Number of requests: #{attack_result[:requests]}\n"
+    log += "Requests per second: #{attack_result[:rps]}\n"
+    log += "Requests per minute: #{attack_result[:rpm]}\n"
+    log += "Average response time: #{attack_result[:average_rt]}\n"
+    log += "Standard deviation: #{attack_result[:sd_rq_time]}\n"
+    log += "Percentile 90th: #{attack_result[:percentile_90]}\n"
+    log += "Percentile 95th: #{attack_result[:percentile_95]}\n"
+    log += "Percentile 99th: #{attack_result[:percentile_99]}\n"
+    log += "server errors (5xx statuses): #{attack_result[:server_errors]}\n"
+
+    @logger.info(log)
   end
 
   def attack_result

@@ -9,27 +9,28 @@ require 'descriptive_statistics/safe'
 
 module ApiBomb
   class War
-    attr_reader :fronts, :duration, :paths, :headers, :base_url
+    attr_reader :fronts, :duration, :paths, :headers, :base_url, :logger
     def initialize(opts = {})
       @fronts = opts[:fronts] || 2
       @duration = opts[:duration] || 10
       @paths = opts[:paths] || ''
       @headers = opts[:headers] || {}
       @base_url = opts[:base_url] || ''
+      @logger = opts[:logger] || Logger.new(STDOUT)
     end
 
     def start!
       if paths.is_a? String
-        puts "#{path_report(paths)}, duration: #{duration} sec"
+        @logger.info("#{path_report(paths)}, duration: #{duration} sec")
         start_attack!(paths)
       elsif paths.is_a? Array
         paths.each do |path|
-          puts "#{path_report(path)}, duration: #{duration} sec"
+          @logger.info("#{path_report(path)}, duration: #{duration} sec")
           start_attack!(path)
-          puts
+          @logger.info("")
         end
       else
-        puts probabilistic_paths_report
+        @logger.info(probabilistic_paths_report)
         start_attack!(paths)
       end
     end
@@ -49,7 +50,8 @@ module ApiBomb
               paths: testing_paths, headers: headers, base_url: base_url
             ]
           )
-        )
+        ),
+        logger: logger
       ).start_attack!
     end
 
