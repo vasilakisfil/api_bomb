@@ -1,20 +1,19 @@
 class ApiBomb::Fighter
   include Celluloid
 
-  attr_reader :paths
+  attr_reader :paths, :headers, :base_url
 
-  def initialize(paths: nil)
+  def initialize(paths: nil, headers: {}, base_url: nil)
+    @base_url = base_url
+    @headers = headers
     @paths = PathPicker.new(paths)
   end
 
   def fire
-    url = API_URL + @paths.pick
+    url = base_url + @paths.pick
     response = nil
     hold_time = Benchmark.measure do
-      response = HTTP.get(url, headers: {
-        'Session-Token' => SESSION_TOKEN,
-        'Connection' => 'close'
-      })
+      response = HTTP.get(url, headers: headers)
     end
 
     return OpenStruct.new(response: response, hold_time: hold_time.real)
@@ -32,7 +31,6 @@ class ApiBomb::Fighter
       path = paths.sample if paths.is_a? Array
 
       return path.call if path.respond_to? :call
-
       return path
     end
   end
