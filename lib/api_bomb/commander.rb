@@ -18,10 +18,12 @@ class ApiBomb::Commander
       #I know that Timeout is really bad
       #but literarly there is no other generic way doing this
       #Fortunately we only do requests to an API so it shouldn't affect us
+      logger.info "Starts firing requests"
       Timeout::timeout(duration) {
         attack
       }
     rescue Timeout::Error
+      logger.info "Ceasefire!"
     end
 
     report_attack_result
@@ -29,20 +31,17 @@ class ApiBomb::Commander
 
 private
   def report_attack_result
-    log = ''
-    log += "Elapsed time: #{attack_result[:duration]}\n"
-    log += "Concurrency: #{attack_result[:fronts]} threads\n"
-    log += "Number of requests: #{attack_result[:requests]}\n"
-    log += "Requests per second: #{attack_result[:rps]}\n"
-    log += "Requests per minute: #{attack_result[:rpm]}\n"
-    log += "Average response time: #{attack_result[:average_rt]}\n"
-    log += "Standard deviation: #{attack_result[:sd_rq_time]}\n"
-    log += "Percentile 90th: #{attack_result[:percentile_90]}\n"
-    log += "Percentile 95th: #{attack_result[:percentile_95]}\n"
-    log += "Percentile 99th: #{attack_result[:percentile_99]}\n"
-    log += "server errors (5xx statuses): #{attack_result[:server_errors]}\n"
-
-    @logger.info(log)
+    logger.info "Elapsed time: #{attack_result[:duration]}"
+    logger.info "Concurrency: #{attack_result[:fronts]} threads"
+    logger.info "Number of requests: #{attack_result[:requests]}"
+    logger.info "Requests per second: #{attack_result[:rps]}"
+    logger.info "Requests per minute: #{attack_result[:rpm]}"
+    logger.info "Average response time: #{attack_result[:average_rt]}"
+    logger.info "Standard deviation: #{attack_result[:sd_rq_time]}"
+    logger.info "Percentile 90th: #{attack_result[:percentile_90]}"
+    logger.info "Percentile 95th: #{attack_result[:percentile_95]}"
+    logger.info "Percentile 99th: #{attack_result[:percentile_99]}"
+    logger.info "server status stas: #{attack_result[:server_status_stats]}"
   end
 
   def attack_result
@@ -57,7 +56,7 @@ private
       percentile_90: @signaler.percentile(90),
       percentile_95: @signaler.percentile(95),
       percentile_99: @signaler.percentile(99),
-      server_errors: @signaler.server_errors
+      server_status_stats: @signaler.server_status_stats
     }
   end
 

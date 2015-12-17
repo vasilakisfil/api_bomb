@@ -30,4 +30,10 @@ class ApiBomb::Signaler
   def server_errors
     @statuses.select{|s| s >= 500}.count
   end
+
+  def server_status_stats
+    @server_status_stats ||= @statuses.group_by{|status|
+      status.to_i.to_s.chop.chop.insert(-1, 'xx')
+    }.map{|s| {s.first => s.last.count}}
+  end
 end
