@@ -1,9 +1,9 @@
 class ApiBomb::Commander
   include ApiBomb::Strategies::Naive
 
-  attr_reader :army, :fronts, :duration, :signaler, :logger
+  attr_reader :army, :fronts, :duration, :signaler, :logger, :requests
 
-  def initialize(army:, fronts: 1, duration: 10, logger: Logger.new(STDOUT))
+  def initialize(army:, fronts: 1, duration: 10, logger: Logger.new(STDOUT), requests: nil)
     @duration = duration
     @army = army
     @fighters = []
@@ -11,6 +11,7 @@ class ApiBomb::Commander
     @hold_times = []
     @fronts = fronts
     @logger = logger
+    @requests = requests
   end
 
   def start_attack!

@@ -10,7 +10,8 @@ require 'forwardable'
 
 module ApiBomb
   class War
-    attr_reader :fronts, :duration, :paths, :options, :base_url, :logger
+    attr_reader :fronts, :duration, :paths, :options, :base_url, :logger,
+      :requests
     #alias_method :path, :paths
 
     def initialize(opts = {})
@@ -20,6 +21,7 @@ module ApiBomb
       @options = HashCall.new(opts[:options] || {})
       @base_url = opts[:base_url] || ''
       @logger = opts[:logger] || Logger.new(STDOUT)
+      @requests = opts[:requests]
     end
 
     def start!
@@ -54,7 +56,8 @@ module ApiBomb
             ]
           )
         ),
-        logger: logger
+        logger: logger,
+        requests: requests
       ).start_attack!
     end
 
@@ -92,7 +95,7 @@ module ApiBomb
 
     def initialize(path:, action: :get, options: {})
       @path = path
-      @action = action 
+      @action = action
       @action = :get if not HTTP_METHODS.include?(action)
       @options = HashCall.new(options)
     end
