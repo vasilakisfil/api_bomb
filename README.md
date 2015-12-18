@@ -192,7 +192,7 @@ ApiBomb::War.new(options.merge({paths: paths})).start!
 
 `Weighted` path uses [Pickup](https://github.com/fl00r/pickup) gem underneath.
 
-## Advanved
+## Advanced
 You can have lambdas/procs in any hash value (or key for `Weighted` paths).
 Internally `Path::Single`, `Path::Sequence` and `Path::Weighted` classes are
 used everywhere, which you can also use
