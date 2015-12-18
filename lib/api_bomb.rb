@@ -17,23 +17,49 @@ module ApiBomb
     def initialize(opts = {})
       @fronts = opts[:fronts] || 2
       @duration = opts[:duration] || 10
-      @paths = opts[:paths] || ''
+      @paths = opts[:paths]
+      @paths = (opts[:path] || '') if @paths.blank?
       @options = HashCall.new(opts[:options] || {})
       @base_url = opts[:base_url] || ''
       @logger = opts[:logger] || Logger.new(STDOUT)
       @requests = opts[:requests]
+      build_paths
+    end
+
+    def build_paths
+      case @paths
+      when String
+        @paths = SinglePath.new(path: @paths)
+      when Array
+        tmp_paths = []
+        @paths.each do |path|
+          if path.is_a? Hash
+            tmp_paths << SinglePath.new(path)
+          elsif path.is_a? String
+            tmp_paths << SinglePath.new(path: path)
+          else
+            raise 'Unknown path structure'
+          end
+        end
+        @paths = ArrayPaths.new(tmp_paths)
+      when Hash
+        @paths = SinglePath.new(@paths)
+      else
+        raise 'Unknown path structure'
+      end
     end
 
     def start!
-      if paths.is_a? SinglePath
+      case paths
+      when SinglePath
         @logger.info("#{paths.report(base_url)}, duration: #{duration} sec")
         start_attack!(paths)
-      elsif paths.is_a? ArrayPaths
+      when ArrayPaths
         paths.each do |path|
           @logger.info("#{path.report(base_url)}, duration: #{duration} sec")
           start_attack!(path)
         end
-      else #probabilistic
+      when RandomPaths
         @logger.info(probabilistic_paths_report)
         start_attack!(paths)
       end
@@ -96,7 +122,7 @@ module ApiBomb
     def initialize(path:, action: :get, options: {})
       @path = path
       @action = action
-      @action = :get if not HTTP_METHODS.include?(action)
+      @action = :get if not HTTP_METHODS.include?(action.downcase.to_sym)
       @options = HashCall.new(options)
     end
 
@@ -161,6 +187,9 @@ module ApiBomb
       h = {}
       hash_call.each do |v, k|
         h[v] = hash_call[v]
+        if h[v].is_a? HashCall
+          h[v] = self.hasharize(h[v])
+        end
       end
 
       return h
