@@ -18,7 +18,7 @@ class ApiBomb::Fighter
       response = HTTP.send(
         route.action,
         url,
-        ApiBomb::HashCall.hasharize(options.merge(route.options))
+        ApiBomb::LambdaHash.hasharize(options.merge(route.options))
       )
     end
 

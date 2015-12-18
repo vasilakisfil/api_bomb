@@ -1,4 +1,4 @@
-module ApiBomb::Strategies
+module ApiBomb::Strategy
   module Naive
     def attack
       if requests
