@@ -35,7 +35,6 @@ Or install it yourself as:
 ## Usage
 First you need to define the global settings.
 Usually in the global settings hash you just want to define the most common settings.
-Options can be overrided later, if needed, per path.
 
 ```ruby
 options = {
@@ -55,6 +54,9 @@ options = {
   },
 }
 ```
+Options keys (like headers, params, json etc) can be overrided later, if needed, per path.
+Oh btw options are passed straight to [http](https://github.com/httprb/http) which
+means you can do anything this gem provides :)
 
 ### Simple mode
 * You want to test how many GET rpm an endpoint can hold?
@@ -79,7 +81,7 @@ Standard deviation: 0.2957473991283155
 Percentile 90th: 1.0887710852002783
 Percentile 95th: 1.154147314250258
 Percentile 99th: 1.5413802972278787
-server status stats: [{"2xx"=>298}]
+Server status stats: [{"2xx"=>298}]
 ```
 You can also inject your logger in the global options.
 
@@ -187,9 +189,12 @@ paths = ApiBomb::Path::Weighted.new({
 ApiBomb::War.new(options.merge({paths: paths})).start!
 ```
 
+`Weighted` path uses [Pickup](https://github.com/fl00r/pickup) gem underneath.
+
 # Advanved
-You can have lambdas/procs in any hash value (or key for RandomPaths). Internally
-Path::Single, Path::Sequence and Path::Weighted classes are used, which you can also use
+You can have lambdas/procs in any hash value (or key for `Weighted` paths).
+Internally `Path::Single`, `Path::Sequence` and `Path::Weighted` classes are
+used everywhere, which you can also use
 but I have ommitted them from the examples for the sake of simplicity (and added
 a builder that figures out what you actually want).
 
@@ -203,8 +208,6 @@ a look on `lib/api_bomb/strategies.rb`
 On the global settings hash, you can also specify the number of requests you want
 to send (which will override the duration unless Timeout exception kicks in first).
 It's not very well tested and should be used mostly for debugging (requests: 1)
-
-Here comes a rather advanced test:
 
 # Best practices
 * When starting optimizing, be sure that you test the performance of your API and
