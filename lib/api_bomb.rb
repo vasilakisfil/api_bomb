@@ -88,8 +88,6 @@ module ApiBomb
     end
 
     def probabilistic_paths_report
-      #return unless paths.is_a? Hash
-
       sum = paths.values.sum
 
       str =  "Load generation over random (weighted) urls \n"

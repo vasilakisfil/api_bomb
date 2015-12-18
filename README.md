@@ -4,6 +4,9 @@ I figured out that none of those was easy to use. Most of them were not built wi
 APIs in mind, was difficult to create a simple test, even more tricky to add
 more sophisticated requests and paid services didn't work for localhost.
 
+I am a nerd, I live inside HTTP and I want to test my API performance without spending
+too much time in this shit.
+
 So I built my own.
 Started as a funny gist, ended up as a fully fledged gem.
 
@@ -32,6 +35,7 @@ Or install it yourself as:
 ## Usage
 First you need to define the global settings.
 Usually in the global settings hash you just want to define the most common settings.
+Options can be overrided later, if needed, per path.
 
 ```ruby
 options = {
@@ -65,7 +69,7 @@ As soon as one is served, a new one will be fired. Once the test duration is
 elapsed it will report back to you:
 
 ```ruby
-testing random paths like GET http://localhost:3000/api/v1/videos with params: , duration: 60 sec
+testing path GET http://localhost:3000/api/v1/videos with params: , duration: 60 sec
 Starts firing requests
 Ceasefire!
 Elapsed time: 60
