@@ -55,11 +55,11 @@ options = {
 }
 ```
 Options keys (like headers, params, json etc) can be overrided later, if needed, per path.
-Oh btw options are passed straight to [http](https://github.com/httprb/http) which
+Oh btw those options are passed straight to [http](https://github.com/httprb/http) which
 means you can do anything this gem provides :)
 
 ### Simple mode
-* You want to test how many GET rpm an endpoint can hold?
+###### You want to test how many GET rpm an endpoint can hold?
 ```ruby
 path = 'videos'
 ApiBomb::War.new(options.merge({path: path})).start!
@@ -86,7 +86,7 @@ Server status stats: [{"2xx"=>298}]
 You can also inject your logger in the global options.
 
 
-* You want to test how many GET rpm a sequence of endpoints can hold? It will run
+###### You want to test how many GET rpm a sequence of endpoints can hold? It will run
 a separate benchmark for each of your endpoints.
 ```ruby
 paths = ['videos', 'users', 'comments']
@@ -97,14 +97,14 @@ first in `http://localhost:3000/api/v1/videos`
 then in `http://localhost:3000/api/v1/users` and finally in
 `http://localhost:3000/api/v1/comments`
 
-* You want to test a POST endpoint? Then you can the slightly more advanced API:
+###### You want to test a POST endpoint? Then you can the slightly more advanced API:
 ```ruby
 video_params = { title: 'A new video!', description: 'a new description!', user_id: 1}
 paths = {path: 'videos', action: :post, options: { json: video_params}}
 ApiBomb::War.new(options.merge({paths: paths})).start!
 ```
 
-* You want to test dynamic endpoints?
+###### You want to test dynamic endpoints?
 ```ruby
 paths = {path: Proc.new{ "videos/#{1.upto(10000).to_a.sample}" } #default action is :get
 ApiBomb::War.new(options.merge({paths: paths})).start!
@@ -117,7 +117,7 @@ You could use FactoryGirl or whatever to get dynamic attributes when creating/up
 a resource in your API. **Be sure to watch out though, that constants and classes have already
 been initialized because most of such gems do lazy initialization.**
 
-* You want to test a sequence of endpoints with dynamic params? It will run a separate
+###### You want to test a sequence of endpoints with dynamic params? It will run a separate
 benchmark for each one in the array.
 ```ruby
 paths = [ #get http method is used by default
@@ -140,7 +140,7 @@ paths = [ #get http method is used by default
 ]
 ```
 
-* You want to test dynamic endpoints with dynamic params?
+###### You want to test dynamic endpoints with dynamic params?
 ```ruby
 paths = {
   path: Proc.new{ ['videos', 'users', 'comments', 'likes'].sample,
@@ -160,6 +160,7 @@ paths = {
 ApiBomb::War.new(options.merge({paths: paths})).start!
 ```
 
+###### You want to test different endpoints with each having different probability to be requested?
 The dynamic nature is up to you. But for your convinience we have created a special
 class that can be used if you want to test random paths using a probability/weight.
 So if you want for bombard 'videos' path 3 times more than comments and comments path 3 times
@@ -191,7 +192,7 @@ ApiBomb::War.new(options.merge({paths: paths})).start!
 
 `Weighted` path uses [Pickup](https://github.com/fl00r/pickup) gem underneath.
 
-# Advanved
+## Advanved
 You can have lambdas/procs in any hash value (or key for `Weighted` paths).
 Internally `Path::Single`, `Path::Sequence` and `Path::Weighted` classes are
 used everywhere, which you can also use
@@ -209,7 +210,7 @@ On the global settings hash, you can also specify the number of requests you wan
 to send (which will override the duration unless Timeout exception kicks in first).
 It's not very well tested and should be used mostly for debugging (requests: 1)
 
-# Best practices
+## Best practices
 * When starting optimizing, be sure that you test the performance of your API and
 not of your webserver. For instance, you might fire 2 concurrent users in an
 endpoint which will result in 300 req/min. Then you might fire 20 concurrent users
