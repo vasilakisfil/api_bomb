@@ -12,9 +12,9 @@ Gem::Specification.new do |spec|
   if spec.respond_to?(:metadata)
   end
 
-  spec.summary       = %q{Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{Write a longer description or delete this line.}
-  spec.homepage      = "http://www.example.com"
+  spec.summary       = %q{Simple gem that allows you to test/measure your API performance.}
+  spec.description   = %q{Simple gem that allows you to test/measure your API performance.}
+  spec.homepage      = "https://github.com/vasilakisfil/api_bomb"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
