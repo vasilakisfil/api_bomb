@@ -19,7 +19,7 @@ module ApiBomb
     #alias_method :path, :paths
 
     def initialize(opts = {})
-      @fronts = opts[:fronts] || 2
+      @fronts = opts[:concurrent_users] || 2
       @duration = opts[:duration] || 10
       @paths = opts[:paths]
       @paths = (opts[:path] || '') if @paths.blank?

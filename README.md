@@ -38,7 +38,7 @@ Usually in the global settings hash you just want to define the most common sett
 
 ```ruby
 options = {
-  fronts: 4, #concurrent users
+  concurrent_users: 4, #concurrent users
   duration: 60, #seconds
   base_url: 'http://localhost:3000/api/v1', #base url
   options: { #this hash is overriden for each path that has its own options
