@@ -65,7 +65,7 @@ module ApiBomb
           start_attack!(path)
         end
       when Path::Weighted
-        @logger.info(paths.report)
+        @logger.info(paths.report(base_url))
         start_attack!(paths)
       end
     end

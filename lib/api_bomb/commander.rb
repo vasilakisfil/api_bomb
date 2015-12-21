@@ -39,6 +39,7 @@ private
     logger.info "Requests per minute: #{attack_result[:rpm]}"
     logger.info "Average response time: #{attack_result[:average_rt]}"
     logger.info "Standard deviation: #{attack_result[:sd_rq_time]}"
+    logger.info "Percentile 50th: #{attack_result[:percentile_50]}"
     logger.info "Percentile 90th: #{attack_result[:percentile_90]}"
     logger.info "Percentile 95th: #{attack_result[:percentile_95]}"
     logger.info "Percentile 99th: #{attack_result[:percentile_99]}"
@@ -54,6 +55,7 @@ private
       rpm: @signaler.fighters_lost / (duration/60.0),
       average_rt: @signaler.mean_hold_time,
       sd_rq_time: @signaler.sd_time,
+      percentile_50: @signaler.percentile(50),
       percentile_90: @signaler.percentile(90),
       percentile_95: @signaler.percentile(95),
       percentile_99: @signaler.percentile(99),

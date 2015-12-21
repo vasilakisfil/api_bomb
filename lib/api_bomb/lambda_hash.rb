@@ -14,6 +14,8 @@ class ApiBomb::LambdaHash < SimpleDelegator
   end
 
   def is_lambda?
+    return false if self.blank?
+
     self.each do |k,v|
       if self[k].is_a? self.class
         return self[k].is_lambda?

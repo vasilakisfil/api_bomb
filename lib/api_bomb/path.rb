@@ -43,6 +43,8 @@ module ApiBomb::Path
     end
 
     def params_report
+      return '' unless options[:params]
+
       if options.is_lambda?
         " with random params like: #{ApiBomb::LambdaHash.hasharize(options)[:params]}"
       else
@@ -76,15 +78,16 @@ module ApiBomb::Path
       Single.new(@weighted_paths.pick)
     end
 
-    def report
+    def report(base_url)
       sum = paths.values.sum
 
-      str =  "Load generation over random (weighted) urls \n"
+      str_array = []
+      str_array << "Load generation over random (weighted) urls \n"
       paths.sort_by {|_key, value| value}.to_h.each do |path, weight|
-        str += "#{path} with probability #{weight/sum} \n"
+        str_array << "#{Single.new(path).report(base_url)} with probability #{weight/sum} \n"
       end
 
-      return str
+      return str_array.join(' ')
     end
   end
 end
