@@ -44,6 +44,7 @@ private
     logger.info "Percentile 95th: #{attack_result[:percentile_95]}"
     logger.info "Percentile 99th: #{attack_result[:percentile_99]}"
     logger.info "Server status stats: #{attack_result[:server_status_stats]}"
+    attack_result
   end
 
   def attack_result
